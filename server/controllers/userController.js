@@ -6,7 +6,7 @@ const assignOfficerRole = async (req,res) =>
     try{
         const {userId, officerRoleId} = req.body;
 
-        if (!userId || officerRoleId) {
+        if (!userId || !officerRoleId) {
             return res.status(400).json({message: "user and officerRoleId are required"});
         }
 
