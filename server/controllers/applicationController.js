@@ -36,7 +36,7 @@ const submitApplication = async (req,res) => {
 
 const getMyApplication = async (req,res) =>{
     try{
-        const application = await Application.findOne({userId: req._id});
+        const application = await Application.findOne({userId: req.user._id});
         if(!application){
             return res.status(404).json({message: "application not  found.please submit a application."});
         }
