@@ -1,4 +1,4 @@
-const officerRole = require("../models/officerRole");
+const OfficerRole = require("../models/officerRole");
 
 const requirePermission = (permission) => {
     return async (req,res,next) =>{
@@ -7,7 +7,7 @@ const requirePermission = (permission) => {
                 return next();
             }
             if (req.user.role === "OFFICER"){
-                const officerRole = await officerRole.findById(req.user.officerRoleId);
+                const officerRole = await OfficerRole.findById(req.user.officerRoleId);
                 if (officerRole && officerRole.permissions.includes(permission)){
                     return next();
                 }
@@ -22,4 +22,4 @@ const requirePermission = (permission) => {
   };
 };
 
-modules.exports = requirePermission;
+module.exports = requirePermission;
