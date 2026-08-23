@@ -29,8 +29,8 @@ const registerUser = async (req,res) => {
         //generate JWT token
         const token = jwt.sign(
             {
-                id: user.id,
-                role: user.role
+                id: newUser.id,
+                role: newUser.role
             },
             process.env.JWT_SECRET,
             {expiresIn: "7d"}
@@ -49,4 +49,48 @@ const registerUser = async (req,res) => {
     }
 };
 
-module.exports = {registerUser};
+//login exit user
+const loginUser = async (req,res) => {
+    try{
+        const{email,password} = req.body;
+        if (!email || !password){
+            return res.status(400).json({message: "please provide email and password"});
+        }
+
+    //find user email
+        const user = await User.findOne({email});
+        if (!user) {
+            return res.status(401).json({message: "invalid email or password"});
+            
+        }
+
+       //entered password match hashed password
+        const isMatch = await bcrypt.compare(password,user.password);
+        if (!isMatch){
+            return res.status(401).json({message: "invalid email or password"});
+        }
+
+        //generate JWT token
+       const token = jwt.sign(
+            {
+                id: user.id,
+                role: user.role
+            },
+            process.env.JWT_SECRET,
+            {expiresIn: "7d"}
+        );
+        
+        res.status(200).json({
+            _id: user._id,
+            name: user.name,
+            email: userser.email,
+            role: user.role,
+            token,
+        });
+    }
+    catch(error) {
+        res.status(500).json({message: "server error", error: error.message});
+    }
+};
+
+module.exports = {registerUser,loginUser};
