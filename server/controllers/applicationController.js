@@ -14,7 +14,10 @@ const submitApplication = async (req,res) => {
         if (applicantType === "COMPANY" && !companyName) {
                     return res.status(400).json({message: "company name is required for company applicant"})
                 }      
-        
+        const existingPending = await Application.findOne({userId: req.user._id,status: "PENDINg"});
+        if (existingPending){
+            return res.status(400).json({message: "you already have a pending application"});
+        }
         const application = await Application.create({
             userId: req.user._id,
             applicantType,
