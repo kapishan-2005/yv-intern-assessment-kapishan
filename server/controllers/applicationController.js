@@ -99,7 +99,7 @@ const approveApplication = async (req,res) => {
         application.status = "APPROVED";
         application.reviewedBy = req.user._id;
         await application.save();
-        await loAction(req.user._id, "APPLICATION_APPROVED",`Approved application for ${application.fullName || application.companyName}`);
+        await logAction(req.user._id, "APPLICATION_APPROVED",`Approved application for ${application.fullName || application.companyName}`);
         const membershipNo = await generateMembershipNo();
 
         const member = await Member.create({
@@ -137,7 +137,7 @@ const rejectApplication = async (req,res) => {
     application.rejectionReason = rejectionReason;
     application.reviewedBy = req.user._id;
     await application.save();
-    await logAction(req.user._id, "APPLICATION_REJECTED", `Rejected application for ${application.fullName || application.comapnyName}`);
+    await logAction(req.user._id, "APPLICATION_REJECTED", `Rejected application for ${application.fullName || application.companyName}`);
     res.status(200).json(application)
 }
  catch(error) {
