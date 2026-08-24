@@ -35,7 +35,7 @@ const Login = () => {
     };
 
     return (
-        <div style={{maxwidth: 400, margin: "50px auto"}}>
+        <div style={{maxWidth: 400, margin: "50px auto"}}>
             <h2>Login</h2>
             {error && <p style={{color: "red"}}>{error}</p>}
             <form onSubmit={handleSubmit}>
@@ -47,7 +47,7 @@ const Login = () => {
                     <label>password</label>
                     <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
                 </div>
-                <button type="submit" disable={loading}>
+                <button type="submit" disabled={loading}>
                     {loading ? "Logging in..." : "Login"}
                 </button>
             </form>

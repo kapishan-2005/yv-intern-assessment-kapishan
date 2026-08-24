@@ -17,7 +17,7 @@ const Register = () => {
         setError("");
         setLoading(true);
         try{
-            const res = await api.post("/auth/login", {email, password});
+            const res = await api.post("/auth/register", {name, email, password});
             login(res.data);
              navigate("/member/dashboard")
            
@@ -31,13 +31,13 @@ const Register = () => {
     };
 
     return (
-        <div style={{maxwidth: 400, margin: "50px auto"}}>
+        <div style={{maxWidth: 400, margin: "50px auto"}}>
             <h2>Register</h2>
             {error && <p style={{color: "red"}}>{error}</p>}
             <form onSubmit={handleSubmit}>
                 <div>
                     <label>Name</label>
-                    <input type="text" value={name} onChange={(e) => setEmail(e.target.value)} required />
+                    <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
                 </div>
                 <div>
                     <label>Email</label>
@@ -47,9 +47,7 @@ const Register = () => {
                     <label>password</label>
                     <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} />
                 </div>
-                <button type="submit" disable={loading}>
-                    {loading ? "Logging in..." : "Login"}
-                </button>
+                <button type="submit" disabled={loading}>Submit</button>
             </form>
             <p>Already have an account? <Link to ="/login">Login</Link></p>
         </div>

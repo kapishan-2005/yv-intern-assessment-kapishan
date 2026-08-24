@@ -8,9 +8,9 @@ const StaffDashboard =() => <h2>staff Dashboard (Coming Soon)</h2>;
 
 const ProtectedRoute = ({children, allowedRoles}) => {
   const {user} = useAuth();
-  if (!user) return <Navigate to="login"/>;
+  if (!user) return <Navigate to="/login"/>;
   if (allowedRoles && !allowedRoles.includes(user.role)) {
-    return <Navigate to= "login"/>;
+    return <Navigate to= "/login"/>;
   }
   return children;
 };
