@@ -145,5 +145,18 @@ const rejectApplication = async (req,res) => {
     }
 };
 
-module.exports = {submitApplication, getMyApplication, getAllApplications,approveApplication, rejectApplication};
+const getMyMembership = async (req,res) => {
+    try{
+        const member = await Member.findOne({userId:req.user._id});
+        if (!member) {
+            return res.ststus(404).json({message: "no active membership"});
+        }
+        res.ststus(200).json(member);
+    }
+    catch (error){
+        res.ststus(500).json({message: "server error", error: error.message});
+    }
+};
+
+module.exports = {submitApplication, getMyApplication, getAllApplications,approveApplication, rejectApplication,getMyMembership};
 
