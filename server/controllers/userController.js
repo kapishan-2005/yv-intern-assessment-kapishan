@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const officerRole = require("../models/officerRole");
+const logAction = require("../services/auditService");
 
 const assignOfficerRole = async (req,res) =>
 {
@@ -20,6 +21,10 @@ const assignOfficerRole = async (req,res) =>
             {role: "OFFICER", officerRoleId: officerRoleId},
             {new: true}
         ).select("-password");
+        
+        if (user) {
+            await logAction(req.user._id, "ROLE_ASSIGENED", `Assigened role to ${user.name}`);
+        }
 
         if (!user) {
             return res.status(404).json({message: "User not found"});

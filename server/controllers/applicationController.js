@@ -1,6 +1,8 @@
 const Application = require("../models/Application");
 const Member = require("../models/Member");
 const generateMembershipNo = require("../utils/generateMembershipNo");
+const loAction = require("../services/auditService");
+
 
 const submitApplication = async (req,res) => {
     try{
@@ -97,7 +99,7 @@ const approveApplication = async (req,res) => {
         application.status = "APPROVED";
         application.reviewedBy = req.user._id;
         await application.save();
-        
+        await loAction(req.user._id, "APPLICATION_APPROVED",`Approved application for ${application.fullName || application.companyName}`);
         const membershipNo = await generateMembershipNo();
 
         const member = await Member.create({
@@ -112,6 +114,7 @@ const approveApplication = async (req,res) => {
         res.status(500).json({message: "server error", error: error.message});
     }
 };
+
 
 const rejectApplication = async (req,res) => {
     try{
@@ -134,7 +137,7 @@ const rejectApplication = async (req,res) => {
     application.rejectionReason = rejectionReason;
     application.reviewedBy = req.user._id;
     await application.save();
-
+    await logAction(req.user._id, "APPLICATION_REJECTED", `Rejected application for ${application.fullName || application.comapnyName}`);
     res.status(200).json(application)
 }
  catch(error) {
