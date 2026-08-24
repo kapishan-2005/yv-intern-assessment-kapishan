@@ -4,6 +4,8 @@ import {useAuth} from "../context/AuthContext";
 
 const StaffDashboard = () => {
      const {user, logout} = useAuth();
+     const[activeTab,setActiveTab]= useState("applications");
+
      const[applications,setApplications] = useState([]);
      const[statusFilter,setStatusFilter] = useState("");
      const[page,setPage] = useState(1);
@@ -12,10 +14,21 @@ const StaffDashboard = () => {
      const[rejectingId,setRejectingId] = useState(null);
      const[rejectReason,setRejectReason] = useState("");
 
+     const[members,setMember] = useState([]);
+     const[memberSearch,setMemberSearch] = useState("");
+     const[memberRole,setMemberRole] = useState("");
+     const[memberPage,setMemberPage] = useState(1);
+     const[memberTotalPages,setMemberTotalPages] = useState(1);
+     const[memberLoading,setMemberLoading] = useState(true);
+
 
      useEffect(()=>{
-        fetchApplications();
-     }, [statusFilter, page]);
+        if(activeTab === "applications") fetchApplications();
+     }, [statusFilter, page, activeTab]);
+
+     useEffect(()=>{
+        if(activeTab === "members") fetchMembers();
+     }, [memberSearch, memberRole,memberPage, activeTab]);
     
      const fetchApplications = async ()=>{
          setLoading(true);
@@ -32,6 +45,25 @@ const StaffDashboard = () => {
          finally {
             setLoading(false);
          }
+     };
+
+     const fetchMembers = async ()=>{
+        setMemberLoading(true);
+        try{
+            const params = {page: memberPage,limit:10};
+            if (memberSearch) params.search = memberSearch;
+            if (memberRole) params.role =memberRole;
+            const res = await api.get("/users", {params});
+            setMember(res.data.data);
+            setMemberTotalPages(res.data.totalPages);
+        }
+        catch(err) {
+            console.error(err);
+
+        }
+        finally{
+            setMemberLoading(false);
+        }
      };
 
      const handleApprove = async (id) => {
@@ -68,15 +100,21 @@ const StaffDashboard = () => {
                </div>
             </div>
 
-            <div>
-                <label>Filter by Status:</label>
-                <select value={statusFilter} onChange={(e) => {setStatusFilter(e.target.value); setPage(1);}}>
-                    <option value="">All</option>
-                    <option value="PENDING">Pending</option>
-                    <option value="APPROVED">Approved</option>
-                    <option value="REJECTED">Rejected</option>
-                </select>
-            </div>
+             <div style={{margin: "15px 0"}}>
+                 <button onClick={()=> setActiveTab("applications")} disabled={activeTab ==="applications"}>Applications</button>
+                 <button onClick={()=> setActiveTab("members")} disabled={activeTab ==="members"} style={{marginLeft:10}}>Member List</button>
+               </div>
+            {activeTab === "applications" && (
+                <>
+                 <div>
+                    <label>Filter by status</label>
+                    <select value={statusFilter} onChange={(e) => {setStatusFilter(e.target.value); setPage(1);}}>
+                        <option value="">All</option>
+                        <option value="PENDING">Pending</option>
+                        <option value="APPROVED">Approved</option>
+                        <option value="REJECTED">Rejected</option>
+                    </select>
+                 </div>
 
             {loading ? (
                 <p>Loading...</p>
@@ -102,7 +140,7 @@ const StaffDashboard = () => {
                                     {app.status === "PENDING" && (
                                         <>
                                             {user.permissions?.includes("application.approve") && (
-                                                <button onClick={()=> handleApprove=(app._id)}>Approve</button>
+                                                <button onClick={()=> handleApprove(app._id)}>Approve</button>
                                             )}
                                             {user.permissions?.includes("application.reject") && (
                                               rejectingId === app._id ? (
@@ -132,6 +170,55 @@ const StaffDashboard = () => {
                 <span style={{margin: "0 10px"}}>Page  {page} of {totalPages}</span>
                 <button disabled={page === totalPages} onClick={() => setPage(page + 1)}>Next</button>
             </div>
+        </>
+     )}
+
+      {activeTab === "members" && (
+              <>
+                <div style={{display:"flex", gap:10}}>
+                    <input
+                        type="text"
+                        placeholder="Search name or email"
+                        value={memberSearch}
+                        onChange={(e) => { setMemberSearch(e.target.value); setMemberPage(1); }}
+                    />
+                    <select value={memberRole} onChange={(e) => { setMemberRole(e.target.value); setMemberPage(1); }}>
+                        <option value="">All Roles</option>
+                        <option value="MEMBER">Member</option>
+                        <option value="OFFICER">Officer</option>
+                    </select>
+                </div>
+
+                {memberLoading ? (
+                    <p>Loading...</p>
+                ) : (
+                    <table border="1" cellPadding="8" style={{width:"100%", marginTop:10}}>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {members.map((m) => (
+                                <tr key={m._id}>
+                                    <td>{m.name}</td>
+                                    <td>{m.email}</td>
+                                    <td>{m.role}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                )}
+
+                <div style={{marginTop:10}}>
+                    <button disabled={memberPage === 1} onClick={() => setMemberPage(memberPage - 1)}>Previous</button>
+                    <span style={{margin: "0 10px"}}>Page  {memberPage} of {memberTotalPages}</span>
+                    <button disabled={memberPage === memberTotalPages} onClick={() => setMemberPage(memberPage + 1)}>Next</button>
+                </div>
+              </>
+            )}
         </div>
      );
 };
