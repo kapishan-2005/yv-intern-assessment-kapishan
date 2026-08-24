@@ -3,6 +3,7 @@ import { AuthProvider, useAuth} from "./context/AuthContext";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import MemberDashboard from "./pages/MemberDashboard";
+import ChairmanRoles from "./pages/ChairmanRoles";
 
 const StaffDashboard =() => <h2>staff Dashboard (Coming Soon)</h2>;
 
@@ -29,6 +30,12 @@ function AppRoutes(){
          <ProtectedRoute allowedRoles={["OFFICER","CHAIRMAN"]}>
            <StaffDashboard/>
          </ProtectedRoute>
+      }/>
+
+      <Route path="/chairman/roles" element={
+        <ProtectedRoute allowedRoles={["CHAIRMAN"]}>
+          <ChairmanRoles/>
+        </ProtectedRoute>
       }/>
       <Route path="/" element={<Navigate to ="/login" />} />
     </Routes>
