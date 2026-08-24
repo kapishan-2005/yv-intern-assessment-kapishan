@@ -38,8 +38,38 @@ const assignOfficerRole = async (req,res) =>
 
 const getAllUsers = async (req,res) => {
     try{
-        const users =await User.find().select("-password");
-        res.status(200).json(users);
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const search = req.query.search;
+        const role = req.query.role;
+
+        const filter = {};
+        if (search) {
+            filter.$or = [
+                {name: {$regex: search, $options: "i"}},
+                {email: {$regex: search, $options: "i"}},
+            ];
+        }
+        if (role) {
+            filter.role = role;
+        }
+
+        const users = await User.find(filter)
+            .select("-password")
+            .skip((page -1) * limit)
+            .limit(limit)
+            .sort({createAt: -1});
+
+        const total = await User.countDocuments(filter);
+
+        res.status(200).json({
+            data: users,
+            total,
+            page,
+            totalPages: Math.ceil(total / limit);
+
+        });
+
     }
     catch(error) {
         res.status(500).json({message: "server error", error: error.message});
