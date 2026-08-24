@@ -2,8 +2,8 @@ import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 import { AuthProvider, useAuth} from "./context/AuthContext";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import MemberDashboard from "./pages/MemberDashboard";
 
-const MemberDashboard =() => <h2>Mmber Dashboard (Coming Soon)</h2>;
 const StaffDashboard =() => <h2>staff Dashboard (Coming Soon)</h2>;
 
 const ProtectedRoute = ({children, allowedRoles}) => {

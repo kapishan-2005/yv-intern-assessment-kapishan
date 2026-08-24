@@ -27,14 +27,14 @@ const MemberDashboard =() => {
     if (loading) return <p>Loading...</p>;
 
     return(
-        <div styel={{maxWidth: 600, margin: "30px auto"}}>
+        <div style={{maxWidth: 600, margin: "30px auto"}}>
             <div style={{display: "flex", justifyContent: "space-between"}}>
                 <h2>Welcome, {user.name}</h2>
                 <button onClick={logout}>Logout</button>
             </div>
 
             {application ? (
-                <ApplicationStatus application={appliaction} />
+                <ApplicationStatus application={application} />
             ) : (
                 <ApplicationForm onSubmitted={fetchMyApplication}/>            
                 )}
@@ -50,7 +50,7 @@ const ApplicationStatus = ({application}) => (
         <p><strong>Name:</strong>{application.fullName || application.companyName}</p>
         <p><strong>Membership Type:</strong>{application.membershipType}</p>
         {application.status === "REJECTED" && (
-            <p style={{ color: "red"}}><strong>Rejection Reason:</strong>{application.rejectionReason</p>
+            <p style={{ color: "red"}}><strong>Rejection Reason:</strong>{application.rejectionReason}</p>
         )}
     </div>
 );
@@ -65,7 +65,7 @@ const ApplicationForm = ({ onSubmitted}) => {
     const [address, setAddress] = useState("");
     const [membershipType, setMembershipType] = useState("Standard");
     const [error, setError] = useState("");
-    const [loading, setLoading] = useState("false");
+    const [loading, setLoading] = useState(false);
 
      const handleSubmit = async (e) => {
         e.preventDefault();
@@ -99,7 +99,7 @@ const ApplicationForm = ({ onSubmitted}) => {
             <form onSubmit={handleSubmit}>
                 <div>
                     <label>Applicant Type</label>
-                    <select value="applicantType"  onChange={(e) => setEmail(e.target.value)} required>
+                    <select value={applicantType}  onChange={(e) => setApplicantType(e.target.value)} required>
                         <option value="INDIVIDUAL">Individual</option>
                         <option value="COMPANY">Company</option>
                     </select>
@@ -108,38 +108,38 @@ const ApplicationForm = ({ onSubmitted}) => {
                 {applicantType === "INDIVIDUAL" ? (
                     <div>
                         <label>Full Name</label>
-                        <input type="text" value={fullName} onChange={(e) => setFullName(e.target)} required />
+                        <input type="text" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
                     </div>
                 ) : (
                     <div>
                         <label>Company Name</label>
-                        <input type="text" value={companyName} onChange={(e) => setCompanyName(e.target)} required />
+                        <input type="text" value={companyName} onChange={(e) => setCompanyName(e.target.value)} required />
                     </div>
                 )}
 
                 <div>
-                    <label>{applicationType === "INDIVIDUAL" ? "NIC" : "Business Registration No"}</label>
-                     <input type="text" value={nicOrRegNo} onChange={(e) => setNicOrRegNo(e.target)} required />
+                    <label>{applicantType === "INDIVIDUAL" ? "NIC" : "Business Registration No"}</label>
+                    <input type="text" value={nicOrRegNo} onChange={(e) => setNicOrRegNo(e.target.value)} required />
                 </div>
 
-                 <div>
+                <div>
                     <label>Email</label>
-                     <input type="email" value={email} onChange={(e) => setEmail(e.target)} required />
+                    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
                 </div>
 
                 <div>
                     <label>Phone</label>
-                     <input type="text" value={phone} onChange={(e) => setPhone(e.target)} required />
+                    <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} required />
                 </div>
 
                 <div>
                     <label>Address</label>
-                     <input type="text" value={address} onChange={(e) => setAddress(e.target)} required />
+                    <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} required />
                 </div>
 
                 <div>
                     <label>Membership Type</label>
-                    <select value={membershipType} onChange={(e) => setMembershipType(e.target.value)}>
+                    <select value={membershipType} onChange={(e) => setMembershipType(e.target)}>
                         <option value="Standard">Standard</option>
                         <option value="Corporate">Corporate</option>
                         <option value="Premium">Premium</option>
