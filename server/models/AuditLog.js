@@ -4,7 +4,7 @@ const auditLogSchema = new mongoose.Schema(
     {
         userId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "user",
+            ref: "User",
             required: true,
         },
         action: {
@@ -12,7 +12,6 @@ const auditLogSchema = new mongoose.Schema(
             required: true,
         },
         details: {
-            ref: "user",
             type: String,
             default: "",
         },
