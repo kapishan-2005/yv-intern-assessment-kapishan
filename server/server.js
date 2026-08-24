@@ -8,6 +8,7 @@ const roleRoutes = require("./routes/roleRoutes");
 const userRoutes = require("./routes/userRoutes")
 const auditRoutes = require("./routes/auditRoutes");
 const membershipTypeRoutes = require("./routes/membershipTypeRoutes");
+const errorHandler = require("./middleware/errorHandler")
 
 connectDB();
 const app=express();
@@ -29,3 +30,11 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT,()=>{
     console.log(`server running on port ${PORT}`);
 });
+
+app.get("/",(req,res) => {
+    res.send("API running");
+});
+
+app.use(errorHandler);
+
+const PORT = process.env.PORT || 5000;
