@@ -6,6 +6,7 @@ const authRoutes = require("./routes/authRoutes");
 const applicationRoutes = require("./routes/applicationRoutes")
 const roleRoutes = require("./routes/roleRoutes");
 const userRoutes = require("./routes/userRoutes")
+const auditRoutes = require("./routes/auditRoutes");
 
 connectDB();
 const app=express();
@@ -15,7 +16,8 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/applications", applicationRoutes);
 app.use("/api/roles", roleRoutes);
-app.use("/api/users",userRoutes)
+app.use("/api/users",userRoutes);
+app.use("/api/audit-logs", auditRoutes);
 app.get("/",(req,res) => {
     res.send("API running");
 });

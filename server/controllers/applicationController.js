@@ -1,7 +1,7 @@
 const Application = require("../models/Application");
 const Member = require("../models/Member");
 const generateMembershipNo = require("../utils/generateMembershipNo");
-const loAction = require("../services/auditService");
+const logAction = require("../services/auditService");
 
 
 const submitApplication = async (req,res) => {
