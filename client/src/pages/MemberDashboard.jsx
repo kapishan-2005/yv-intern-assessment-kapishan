@@ -44,7 +44,12 @@ const MemberDashboard =() => {
             </div>
 
             {application ? (
+               <>
                 <ApplicationStatus application={application} membership={membership} />
+                {application.status === "REJECTED" && (
+                    <ApplicationForm onSubmitted={fetchMyApplication}/>
+                )}
+               </>
             ) : (
                 <ApplicationForm onSubmitted={fetchMyApplication}/>            
                 )}
