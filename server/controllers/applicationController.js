@@ -8,13 +8,17 @@ const isValidPhone = (phone) => /^[0-9]{9,15}$/.test(phone);
 
 const submitApplication = async (req,res) => {
     try{
-        const{ applicantType,fullName,companyName,nicOrRegNo,email,phone,address,membershipType,} = req.body;
-         if (!applicantType || !nicOrRegNo || !email || !phone || !address || !membershipType){
+      const{ applicantType,fullName,companyName,nicOrRegNo,email,phone,address,membershipType,} = req.body;
+        if (!applicantType || !nicOrRegNo || !email || !phone || !address || !membershipType){
                     return res.status(400).json({message: "please provide applicantType,nicOrRegNo,email,phone,address and membershipType"});
                 }
-         if (!applicantType || !nicOrRegNo || !email || !phone || !address || !membershipType){
-                    return res.status(400).json({message: "please provide applicantType,nicOrRegNo,email,phone,address and membershipType"});
-             }
+        if (!isValidEmail(email)) {
+            return res.status(400).json({message: "please provide a valid email address"});
+        }
+
+        if (!isValidPhone(phone)) {
+            return res.status(400).json({message: "please provide a valid phone number (9-15 digits)"});
+        }
               
         if (applicantType === "INDIVIDUAL" && !fullName) {
                     return res.status(400).json({message: "full name is required for indidual applicant"})

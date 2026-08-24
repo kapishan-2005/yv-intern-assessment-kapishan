@@ -34,7 +34,7 @@ const applicationSchema = new mongoose.Schema(
         }, 
         membershipType:{
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Membershiptype",
+            ref: "MembershipType",
             required: true,
         },
         status: {

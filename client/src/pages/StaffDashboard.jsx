@@ -134,7 +134,7 @@ const StaffDashboard = () => {
                             <tr key={app._id}>
                                 <td>{app.fullName || app.companyName}</td>
                                 <td>{app.applicantType}</td>
-                                <td>{app.membershipType}</td>
+                                <td>{app.membershipType ?.name}</td>
                                 <td>{app.status}</td>
                                 <td>
                                     {app.status === "PENDING" && (
