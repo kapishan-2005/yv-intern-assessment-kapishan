@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const OfficerRole = require("../models/officerRole");
+const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 const ALL_PERMISSIONS = [
     "member.view",
@@ -27,6 +28,14 @@ const registerUser = async (req,res) => {
         const {name,email,password} = req.body;
         if (!name || !email || !password){
             return res.status(400).json({message: "please provide name, email and password"});
+        }
+
+                if (!isValidEmail(email)) {
+            return res.status(400).json({message: "please provide a valid email address"});
+        }
+
+        if (password.length < 6) {
+            return res.status(400).json({message: "password must be at least 6 characters"});
         }
       
         //check if user already exit
@@ -54,7 +63,7 @@ const registerUser = async (req,res) => {
             process.env.JWT_SECRET,
             {expiresIn: "7d"}
         );
-        
+
         const permissions = await getUserPermissions(newUser);
 
         res.status(201).json({

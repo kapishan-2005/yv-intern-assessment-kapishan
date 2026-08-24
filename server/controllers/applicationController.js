@@ -3,6 +3,8 @@ const Member = require("../models/Member");
 const generateMembershipNo = require("../utils/generateMembershipNo");
 const logAction = require("../services/auditService");
 const MembershipType = require("../models/MembershipType");
+const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+const isValidPhone = (phone) => /^[0-9]{9,15}$/.test(phone);
 
 const submitApplication = async (req,res) => {
     try{
@@ -10,6 +12,9 @@ const submitApplication = async (req,res) => {
          if (!applicantType || !nicOrRegNo || !email || !phone || !address || !membershipType){
                     return res.status(400).json({message: "please provide applicantType,nicOrRegNo,email,phone,address and membershipType"});
                 }
+         if (!applicantType || !nicOrRegNo || !email || !phone || !address || !membershipType){
+                    return res.status(400).json({message: "please provide applicantType,nicOrRegNo,email,phone,address and membershipType"});
+             }
               
         if (applicantType === "INDIVIDUAL" && !fullName) {
                     return res.status(400).json({message: "full name is required for indidual applicant"})
@@ -49,7 +54,7 @@ const submitApplication = async (req,res) => {
 const getMyApplication = async (req,res) =>{
     try{
         const application = await Application.findOne({userId: req.user._id})
-          .sort({createAt: -1})
+          .sort({createdAt: -1})
           .populate("membershipType", "name");
         if(!application){
             return res.status(404).json({message: "application not  found.please submit a application."});

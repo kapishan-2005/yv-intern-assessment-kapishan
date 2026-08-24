@@ -150,7 +150,7 @@ const ApplicationForm = ({ onSubmitted}) => {
 
                 <div>
                     <label>Phone</label>
-                    <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} required />
+                    <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} required  pattern="[0-9]{9,15}" title="phone number must be 9-15 digits"/>
                 </div>
 
                 <div>

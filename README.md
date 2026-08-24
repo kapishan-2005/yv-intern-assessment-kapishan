@@ -5,9 +5,10 @@ MERN application for managing membership applications, staff review, and chairma
 ## Tech Stack
 
 - **Frontend:** React (vite), React Router, Axios
-- **Backend:** Node.js, Express
+- **Backend:** Node.js, Express 
 - **Databse:** MongoDB (Mongoose)
 - **Auth:** JWT bcrypt
+- **API Testing:** Postman
 
 ## Project structure
 
