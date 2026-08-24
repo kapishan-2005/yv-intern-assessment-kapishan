@@ -74,7 +74,7 @@ const ApplicationForm = ({ onSubmitted}) => {
         try{
             await api.post("/applications", {
                 applicantType,
-                fullName: application === "INDIVIDUAL" ? fullName : undefined,
+                fullName: applicantType === "INDIVIDUAL" ? fullName : undefined,
                 companyName: applicantType === "COMPANY" ? companyName : undefined,
                 nicOrRegNo,
                 email,
