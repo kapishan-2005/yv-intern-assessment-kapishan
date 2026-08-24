@@ -15,7 +15,7 @@ const ALL_PERMISSIONS = [
 
 const getUserPermissions = async (user) => {
     if (user.role === "CHAIRMAN") return ALL_PERMISSIONS;
-    if (user.role === "OFFICER" && user. user.officerRoleId){
+    if (user.role === "OFFICER" && user.officerRoleId){
         const role = await OfficerRole.findById(user.officerRoleId);
         return role ? role.permissions : [];
     }
@@ -71,6 +71,7 @@ const registerUser = async (req,res) => {
             name: newUser.name,
             email: newUser.email,
             role: newUser.role,
+            permissions,
             token,
         });
     }
@@ -117,6 +118,7 @@ const loginUser = async (req,res) => {
             name: user.name,
             email: user.email,
             role: user.role,
+            permissions,
             token,
         });
     }
