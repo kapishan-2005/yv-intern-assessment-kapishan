@@ -21,15 +21,6 @@ app.use("/api/roles", roleRoutes);
 app.use("/api/users",userRoutes);
 app.use("/api/audit-logs", auditRoutes);
 app.use("/api/membership-types", membershipTypeRoutes);
-app.get("/",(req,res) => {
-    res.send("API running");
-});
-
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT,()=>{
-    console.log(`server running on port ${PORT}`);
-});
 
 app.get("/",(req,res) => {
     res.send("API running");
@@ -38,3 +29,6 @@ app.get("/",(req,res) => {
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
+app.listen(PORT,()=>{
+    console.log(`server running on port ${PORT}`);
+});

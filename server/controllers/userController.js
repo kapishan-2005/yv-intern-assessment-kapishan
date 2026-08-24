@@ -66,7 +66,7 @@ const getAllUsers = async (req,res) => {
             data: users,
             total,
             page,
-            totalPages: Math.ceil(total / limit);
+            totalPages: Math.ceil(total / limit),
 
         });
 
