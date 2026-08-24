@@ -1,6 +1,25 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const OfficerRole = require("../models/officerRole");
+
+const ALL_PERMISSIONS = [
+    "member.view",
+    "application.view",
+    "application.approve",
+    "application.reject",
+    "role.manage",
+    "audit.view",
+];
+
+const getUserPermissions = async (user) => {
+    if (user.role === "CHAIRMAN") return ALL_PERMISSIONS;
+    if (user.role === "OFFICER" && user. user.officerRoleId){
+        const role = await OfficerRole.findById(user.officerRoleId);
+        return role ? role.permissions : [];
+    }
+    return [];
+};
 
 // Register a new user
 const registerUser = async (req,res) => {
@@ -36,6 +55,8 @@ const registerUser = async (req,res) => {
             {expiresIn: "7d"}
         );
         
+        const permissions = await getUserPermissions(newUser);
+
         res.status(201).json({
             _id: newUser._id,
             name: newUser.name,
@@ -80,6 +101,8 @@ const loginUser = async (req,res) => {
             {expiresIn: "7d"}
         );
         
+        const permissions = await getUserPermissions(user);
+
         res.status(200).json({
             _id: user._id,
             name: user.name,

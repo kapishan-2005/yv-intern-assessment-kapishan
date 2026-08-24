@@ -32,8 +32,8 @@ const ChairmanRoles = () => {
   };
 
   const fetchUsers = async () => {
-    const res = await api.get("/users");
-    setUsers(res.data);
+    const res = await api.get("/users", {params: { limit: 100 } });
+    setUsers(res.data.data);
   };
 
   const togglePermission = (perm) => {
@@ -67,7 +67,7 @@ const ChairmanRoles = () => {
   };
 
   return (
-    <div style={{ maxWidth: 700, margin: "30px auto" }}>
+    <div className="card" style={{ maxWidth: 700, margin: "30px auto" }}>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <h2>Chairman - Role Management</h2>
         <button onClick={logout}>Logout</button>

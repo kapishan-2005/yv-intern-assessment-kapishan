@@ -57,10 +57,15 @@ const StaffDashboard = () => {
      };
 
      return (
-        <div style={{maxWidth: 900, margin:"30px auto"}}>
+        <div className="card" style={{maxWidth: 900, margin:"30px auto"}}>
             <div style={{display: "flex", justifyContent: "space-between"}}>
                <h2>Staff Dashboard - {user.name} ({user.role})</h2>
-               <button onClick={logout}>Logout</button>
+               <div>
+                {user.role === "CHAIRMAN" && (
+                    <a href="/chairman/roles" style={{marginRight:10}}>Manage Roles</a>
+                )}
+                <button onClick={logout}>Logout</button>
+               </div>
             </div>
 
             <div>
@@ -96,8 +101,11 @@ const StaffDashboard = () => {
                                 <td>
                                     {app.status === "PENDING" && (
                                         <>
-                                            <button onClick={() => handleApprove(app._id)}>Approve</button>
-                                            {rejectingId === app._id ? (
+                                            {user.permissions?.includes("application.approve") && (
+                                                <button onClick={()=> handleApprove=(app._id)}>Approve</button>
+                                            )}
+                                            {user.permissions?.includes("application.reject") && (
+                                              rejectingId === app._id ? (
                                                 <>
                                                 <input type="text" 
                                                     placeholder="Reason"
@@ -108,6 +116,7 @@ const StaffDashboard = () => {
                                                 </>
                                             ) : (
                                                 <button onClick={() => setRejectingId(app._id)}>Reject</button>
+                                               )
                                             )}
                                         </>
                                     )}
@@ -126,3 +135,5 @@ const StaffDashboard = () => {
         </div>
      );
 };
+
+export default StaffDashboard;

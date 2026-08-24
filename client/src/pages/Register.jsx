@@ -31,7 +31,7 @@ const Register = () => {
     };
 
     return (
-        <div style={{maxWidth: 400, margin: "50px auto"}}>
+        <div className= "card" style={{maxWidth: 400, margin: "50px auto"}}>
             <h2>Register</h2>
             {error && <p style={{color: "red"}}>{error}</p>}
             <form onSubmit={handleSubmit}>
@@ -47,7 +47,7 @@ const Register = () => {
                     <label>password</label>
                     <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} />
                 </div>
-                <button type="submit" disabled={loading}>Submit</button>
+                <button type="submit" disabled={loading}>Register</button>
             </form>
             <p>Already have an account? <Link to ="/login">Login</Link></p>
         </div>

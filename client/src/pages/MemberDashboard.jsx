@@ -5,6 +5,7 @@ import {useAuth} from "../context/AuthContext";
 const MemberDashboard =() => {
     const {user, logout} = useAuth();
     const[application,setApplication] = useState(null);
+    const[membership,setMembership] = useState(null);
     const [loading,setLoading] = useState(true);
 
     useEffect(()=> {
@@ -15,6 +16,15 @@ const MemberDashboard =() => {
         try{
             const res = await api.get("/applications/my");
             setApplication(res.data);
+            if (res.data.status === "APPROVED") {
+                try{
+                    const memRes =await api.get("/applications/my/membership");
+                    setMembership(memRes.data);
+                }
+                catch (e) {
+                    setMembership(null);
+                }
+            }
         }
         catch (err) {
             setApplication(null);
@@ -27,14 +37,14 @@ const MemberDashboard =() => {
     if (loading) return <p>Loading...</p>;
 
     return(
-        <div style={{maxWidth: 600, margin: "30px auto"}}>
+        <div className= "card" style={{maxWidth: 600, margin: "30px auto"}}>
             <div style={{display: "flex", justifyContent: "space-between"}}>
                 <h2>Welcome, {user.name}</h2>
                 <button onClick={logout}>Logout</button>
             </div>
 
             {application ? (
-                <ApplicationStatus application={application} />
+                <ApplicationStatus application={application} membership={membership} />
             ) : (
                 <ApplicationForm onSubmitted={fetchMyApplication}/>            
                 )}
@@ -42,15 +52,18 @@ const MemberDashboard =() => {
     );
 };
 
-const ApplicationStatus = ({application}) => (
+const ApplicationStatus = ({application, membership}) => (
     <div>
         <h3>My Application</h3>
         <p><strong>Status:</strong>{application.status}</p>
-        <p><strong>Applicant Type:</strong>{application.applicationType}</p>
+        <p><strong>Applicant Type:</strong>{application.applicantType}</p>
         <p><strong>Name:</strong>{application.fullName || application.companyName}</p>
         <p><strong>Membership Type:</strong>{application.membershipType}</p>
         {application.status === "REJECTED" && (
             <p style={{ color: "red"}}><strong>Rejection Reason:</strong>{application.rejectionReason}</p>
+        )}
+        {application.status === "APPROVED" && membership && (
+            <p><strong>Membership Number:</strong> {membership.membershipNo}</p>
         )}
     </div>
 );
@@ -139,7 +152,7 @@ const ApplicationForm = ({ onSubmitted}) => {
 
                 <div>
                     <label>Membership Type</label>
-                    <select value={membershipType} onChange={(e) => setMembershipType(e.target)}>
+                    <select value={membershipType} onChange={(e) => setMembershipType(e.target.value)}>
                         <option value="Standard">Standard</option>
                         <option value="Corporate">Corporate</option>
                         <option value="Premium">Premium</option>

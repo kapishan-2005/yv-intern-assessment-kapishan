@@ -4,8 +4,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import MemberDashboard from "./pages/MemberDashboard";
 import ChairmanRoles from "./pages/ChairmanRoles";
+import StaffDashboard from "./pages/StaffDashboard";
 
-const StaffDashboard =() => <h2>staff Dashboard (Coming Soon)</h2>;
 
 const ProtectedRoute = ({children, allowedRoles}) => {
   const {user} = useAuth();
