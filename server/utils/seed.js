@@ -23,6 +23,7 @@ const seedMembershipTypes = async () => {
 const seedChairman = async () =>{
     try{
         await connectDB();
+        await seedMembershipTypes();
         const exitingChairman = await User.findOne({role: "CHAIRMAN"});
 
         if (exitingChairman){
