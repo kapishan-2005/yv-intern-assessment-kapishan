@@ -58,7 +58,7 @@ const ApplicationStatus = ({application, membership}) => (
         <p><strong>Status:</strong>{application.status}</p>
         <p><strong>Applicant Type:</strong>{application.applicantType}</p>
         <p><strong>Name:</strong>{application.fullName || application.companyName}</p>
-        <p><strong>Membership Type:</strong>{application.membershipType}</p>
+        <p><strong>Membership Type:</strong>{application.membershipType ?.name}</p>
         {application.status === "REJECTED" && (
             <p style={{ color: "red"}}><strong>Rejection Reason:</strong>{application.rejectionReason}</p>
         )}
@@ -76,9 +76,17 @@ const ApplicationForm = ({ onSubmitted}) => {
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
     const [address, setAddress] = useState("");
-    const [membershipType, setMembershipType] = useState("Standard");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const [membershipType, setMembershipType] = useState("");
+    const [membershipTypes, setMembershipTypes] = useState([]);
+
+    useEffect(() => {
+        api.get("/membership-types").then((res) => {
+            setMembershipTypes(res.data);
+            if (res.data.length > 0) setMembershipType(res.data[0]._id);
+        });
+    }, []);
 
      const handleSubmit = async (e) => {
         e.preventDefault();
@@ -151,11 +159,11 @@ const ApplicationForm = ({ onSubmitted}) => {
                 </div>
 
                 <div>
-                    <label>Membership Type</label>
-                    <select value={membershipType} onChange={(e) => setMembershipType(e.target.value)}>
-                        <option value="Standard">Standard</option>
-                        <option value="Corporate">Corporate</option>
-                        <option value="Premium">Premium</option>
+                   <label>Membership Type</label>
+                    <select value={membershipType} onChange={(e) => setMembershipType(e.target.value)} required>
+                        {membershipTypes.map((t) => (
+                            <option key={t._id} value={t._id}>{t.name}</option>
+                        ))}
                     </select>
                 </div>
 

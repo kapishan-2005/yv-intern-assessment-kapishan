@@ -2,7 +2,7 @@ const Application = require("../models/Application");
 const Member = require("../models/Member");
 const generateMembershipNo = require("../utils/generateMembershipNo");
 const logAction = require("../services/auditService");
-
+const MembershipType = require("../models/MembershipType");
 
 const submitApplication = async (req,res) => {
     try{
@@ -17,7 +17,12 @@ const submitApplication = async (req,res) => {
         
         if (applicantType === "COMPANY" && !companyName) {
                     return res.status(400).json({message: "company name is required for company applicant"})
-                }      
+                }   
+                const validType = await MembershipType.findById(membershipType);
+        if (!validType) {
+            return res.status(400).json({message: "invalid membershipType"});
+        }
+                
         const existingPending = await Application.findOne({userId: req.user._id,status: "PENDING"});
         if (existingPending){
             return res.status(400).json({message: "you already have a pending application"});
@@ -43,7 +48,9 @@ const submitApplication = async (req,res) => {
 
 const getMyApplication = async (req,res) =>{
     try{
-        const application = await Application.findOne({userId: req.user._id});
+        const application = await Application.findOne({userId: req.user._id})
+          .sort({createAt: -1})
+          .populate("membershipType", "name");
         if(!application){
             return res.status(404).json({message: "application not  found.please submit a application."});
         }
@@ -67,6 +74,7 @@ const getAllApplications = async (req,res) => {
 
         const applications = await Application.find(filter)
             .populate("userId", "name email")
+            .populate("membershipType", "name")
             .skip((page-1)* limit)
             .limit(limit)
             .sort({createdAt: -1});
@@ -149,12 +157,12 @@ const getMyMembership = async (req,res) => {
     try{
         const member = await Member.findOne({userId:req.user._id});
         if (!member) {
-            return res.ststus(404).json({message: "no active membership"});
+            return res.status(404).json({message: "no active membership"});
         }
-        res.ststus(200).json(member);
+        res.status(200).json(member);
     }
     catch (error){
-        res.ststus(500).json({message: "server error", error: error.message});
+        res.status(500).json({message: "server error", error: error.message});
     }
 };
 

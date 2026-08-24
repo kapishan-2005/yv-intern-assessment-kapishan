@@ -3,6 +3,22 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const connectDB = require("../config/db");
 const User = require("../models/User");
+const Membershiptype = require("../models/MembershipType");
+
+const seedMembershipTypes = async () => {
+    const types = [
+        {name: "Standard", description: "Basic individual membership"},
+        {name: "Corporate", description: "Membership for companies"},
+        {name: "Premium", description: "Premium individual membership"},
+    ];
+    for (const t of types) {
+        const exists = await Membershiptype.findOne({name:t.name});
+        if (!exists) {
+            await Membershiptype.create(t);
+            console.log("Created memberhsip type:", t.name);
+        }
+    }
+};
 
 const seedChairman = async () =>{
     try{

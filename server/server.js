@@ -7,6 +7,7 @@ const applicationRoutes = require("./routes/applicationRoutes")
 const roleRoutes = require("./routes/roleRoutes");
 const userRoutes = require("./routes/userRoutes")
 const auditRoutes = require("./routes/auditRoutes");
+const membershipTypeRoutes = require("./routes/membershipTypeRoutes");
 
 connectDB();
 const app=express();
@@ -18,6 +19,7 @@ app.use("/api/applications", applicationRoutes);
 app.use("/api/roles", roleRoutes);
 app.use("/api/users",userRoutes);
 app.use("/api/audit-logs", auditRoutes);
+app.use("/api/membership-types", membershipTypeRoutes);
 app.get("/",(req,res) => {
     res.send("API running");
 });
