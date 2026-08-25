@@ -118,11 +118,11 @@ auditLogs - who did what when
 - central error handler middleware
 
 ## known Issues
-- Not fully finished. until all working
+- None known - all core features end-to-end.
 
 ## Demo Video
 
-[Google Drive link — Anyone with the link (Viewer)]  (https://drive.google.com/file/d/1OmPUbVe50P8hkNYa5jm40oBcm9Slm2Jc/view?usp=sharing)
+[Watch Demo Video]  (https://drive.google.com/file/d/1OmPUbVe50P8hkNYa5jm40oBcm9Slm2Jc/view?usp=sharing)
 
 
 
