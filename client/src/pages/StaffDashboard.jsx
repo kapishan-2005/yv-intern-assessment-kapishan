@@ -8,6 +8,7 @@ const StaffDashboard = () => {
 
      const[applications,setApplications] = useState([]);
      const[statusFilter,setStatusFilter] = useState("");
+     const[appSearch,setAppSearch] = useState("");
      const[page,setPage] = useState(1);
      const[totalPages,setTotalPages] = useState(1);
      const[loading,setLoading] = useState(true);
@@ -24,7 +25,7 @@ const StaffDashboard = () => {
 
      useEffect(()=>{
         if(activeTab === "applications") fetchApplications();
-     }, [statusFilter, page, activeTab]);
+     }, [statusFilter, appSearch, page, activeTab]);
 
      useEffect(()=>{
         if(activeTab === "members") fetchMembers();
@@ -35,6 +36,7 @@ const StaffDashboard = () => {
          try{
             const params = {page,limit:10};
             if (statusFilter) params.status = statusFilter;
+            if (appSearch) params.search = appSearch;
             const res = await api.get("/applications", {params});
             setApplications(res.data.data);
             setTotalPages(res.data.totalPages);
@@ -106,7 +108,14 @@ const StaffDashboard = () => {
                </div>
             {activeTab === "applications" && (
                 <>
-                 <div>
+                
+                 <div >
+                     <input
+                        type="text"
+                        placeholder="Search applicant name or email"
+                        value={appSearch}
+                        onChange={(e) => { setAppSearch(e.target.value); setPage(1); }}
+                    />
                     <label>Filter by status</label>
                     <select value={statusFilter} onChange={(e) => {setStatusFilter(e.target.value); setPage(1);}}>
                         <option value="">All</option>
@@ -129,7 +138,9 @@ const StaffDashboard = () => {
                             <th>Actions</th>
                         </tr>
                     </thead>
+
                     <tbody>
+
                         {applications.map((app) => (
                             <tr key={app._id}>
                                 <td>{app.fullName || app.companyName}</td>

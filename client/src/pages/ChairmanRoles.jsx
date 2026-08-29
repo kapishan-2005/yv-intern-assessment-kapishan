@@ -21,6 +21,7 @@ const ChairmanRoles = () => {
   const [assignUserId, setAssignUserId] = useState("");
   const [assignRoleId, setAssignRoleId] = useState("");
 
+
   useEffect(() => {
     fetchRoles();
     fetchUsers();

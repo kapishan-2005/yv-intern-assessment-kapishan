@@ -81,6 +81,14 @@ const getAllApplications = async (req,res) => {
             filter.status = status;
         }
 
+        if (search) {
+            filter.$or = [
+                 { fullName: { $regex: search, $options: "i" } },
+                { companyName: { $regex: search, $options: "i" } },
+                { email: { $regex: search, $options: "i" } },
+            ];
+        }
+
         const applications = await Application.find(filter)
             .populate("userId", "name email")
             .populate("membershipType", "name")
